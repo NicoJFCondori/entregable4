@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import './styles/FormUser.css'
 
@@ -7,6 +7,10 @@ const FormUsers = ({ createNewUser, updateInfo, updatedUserById, setUpdateInfo,s
 
     const {register,reset,handleSubmit } = useForm()
 
+    const [existingEmail, setExistingEmail] = useState([]);
+
+    
+
     useEffect(() => {
         reset(updateInfo)
     }, [updateInfo])
@@ -14,12 +18,18 @@ const FormUsers = ({ createNewUser, updateInfo, updatedUserById, setUpdateInfo,s
 
     const submit = data => {
 
-        if(updateInfo) {
-            updatedUserById('/users', updateInfo.id, data)
-            setUpdateInfo()
-        } else {
-            createNewUser ('/users', data)
+        const { email } = data;
+
+        if (!updateInfo && existingEmail.includes(email)) {
+            alert('Este email ya ha sido ingresado. Por favor, ingrese otro email 🙅‍♂️.');
+            return;
         }
+            if(updateInfo) {
+                updatedUserById('/users', updateInfo.id, data)
+                setUpdateInfo()
+            } else {
+                createNewUser ('/users', data)
+            }
         reset({
             email: '',
             password: '',
@@ -27,7 +37,8 @@ const FormUsers = ({ createNewUser, updateInfo, updatedUserById, setUpdateInfo,s
             first_name: '',
             birthday: ''
         });
-        setIsCloseForm(true)
+        setIsCloseForm(true);
+        setExistingEmail((prevEmails) => [...prevEmails, email]);
     };
 
     const handleExit = ()  => {

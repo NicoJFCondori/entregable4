@@ -12,7 +12,7 @@ function App() {
 
   
 
-  const baseUrl = 'https://users-crud.academlo.tech/'
+  const baseUrl = 'https://user-crud-abac.onrender.com/api/v1'
 
 
   const [
